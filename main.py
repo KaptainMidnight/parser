@@ -21,7 +21,7 @@ def parser():
     session = requests.Session()
     request = session.get(b_url, headers=headers)
     if request.status_code == 200:
-        # try:
+        try:
             soup = bs(request.content, "lxml")
             divs = soup.find_all("div", attrs={"class": "_328WR"})  # Search ad in url
             for div in divs:  # Search in url
@@ -53,12 +53,11 @@ def parser():
                                     "city": city,
                                     "category": category
                                 })
-                                print(users_data)
                             except:
                                 pass
-        # except:
-        #     print("Error")
-        #     pass
+         except:
+             print("Error")
+             pass
 
         # except Exception as e:
             # pass
@@ -72,4 +71,6 @@ def file_write(users):
             a_pen.writerow((job['name'], job['phone'], job['city'], job['category']))
 
 
-print(parser())
+row = parser()
+file_write(parser)
+
