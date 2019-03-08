@@ -17,14 +17,14 @@ def parser():
         "user-agent": "Mozilla/5.0 (Windows NT 5.1; rv:47.0) Gecko/20100101 Firefox/47.0"
     }
 
-    b_url = "https://m.avito.ru/rossiya/nedvizhimost?sort=default&withImagesOnly=false"
+    b_url = input("Enter url: ")
     session = requests.Session()
     request = session.get(b_url, headers=headers)
     if request.status_code == 200:
-        try:
+        # try:
             soup = bs(request.content, "lxml")
             divs = soup.find_all("div", attrs={"class": "_328WR"})  # Search ad in url
-            for div in divs:
+            for div in divs:  # Search in url
                 a = div.find("a", attrs={"class": "MBUbs"})['href']
                 city = div.find("div", attrs={"class": "_20Ixl"}).text
                 url_ad = f"https://m.avito.ru{a}"
@@ -56,10 +56,9 @@ def parser():
                                 print(users_data)
                             except:
                                 pass
-        except:
-            print("Error")
-            pass
-    return users_data
+        # except:
+        #     print("Error")
+        #     pass
 
         # except Exception as e:
             # pass
@@ -73,5 +72,4 @@ def file_write(users):
             a_pen.writerow((job['name'], job['phone'], job['city'], job['category']))
 
 
-parser = parser()
-file_write(parser)
+print(parser())
