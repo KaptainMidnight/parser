@@ -82,5 +82,3 @@ def file_write(data):
 parser = main()
 print(parser)
 file_write(parser)
-
-# https://m.avito.ru/rossiya/uslugi?owner[]=private&sort=default&withImagesOnly=false
