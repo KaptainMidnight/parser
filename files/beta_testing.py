@@ -28,12 +28,14 @@ def main():
     session = requests.Session()
     response = session.get(b_url, headers=headers)
     if response.status_code == 200:  # If the answer is 200, then we do the pars
-        try:
             user = []
             soup = bs(response.content, "lxml")
             ads = soup.find_all("div", attrs={"class": "_328WR"})
             for data in ads:
-                a = data.find("a", attrs={"class": "MBUbs"})["href"]
+                try:
+                    a = data.find("a", attrs={"class": "MBUbs"})["href"]
+                except:
+                    pass
                 city = data.find("div", attrs={"class": "_20Ixl"}).text
                 url_add = f"https://m.avito.ru{a}"
                 links = {
@@ -48,7 +50,10 @@ def main():
                         contact_bar = new_soup.find_all("div", attrs={"class": "_3U_HU"})
                         for info in contact_bar:
                             name = info.find("span", attrs={"class": "ZvfUX"}).text
-                            phone = info.find("a", attrs={"class": "_2MOUQ"})["href"]
+                            try:
+                                phone = info.find("a", attrs={"class": "_2MOUQ"})["href"]
+                            except:
+                                pass
                             if "tel:" in phone:
                                 phone.split()
                                 phone = phone[4::1]
@@ -59,8 +64,6 @@ def main():
                             }
                             user.append(user_data)
                             print(len(user))
-        except:
-            pass
     else:
         print(f"Произошла ошибка: {response.status_code}")
 

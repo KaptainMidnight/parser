@@ -23,6 +23,7 @@ def parser():
     b_url = input("Enter url: ")
     session = requests.Session()
     request = session.get(b_url, headers=headers)
+    print(request.status_code)
     if request.status_code == 200:
         try:
             soup = bs(request.content, "lxml")
