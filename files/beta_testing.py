@@ -4,7 +4,13 @@ import requests
 from bs4 import BeautifulSoup as bs
 import csv
 import time
-from tqdm import tqdm
+from selenium import webdriver as wd
+
+
+def press_button():
+    chromedriver = "/Users/applemac/Downloads/chromedriver"  # Link to chromedriver
+    driver = wd.Chrome(chromedriver)
+    driver.get("https://m.avito.ru/rossiya/uslugi")
 
 
 def main():
@@ -22,27 +28,29 @@ def main():
     global user_data
     global a
     global user
-    global counter_ads
     # -----[ Global vars ]-----
-    b_url = "https://m.avito.ru/rossiya/uslugi?owner[]=private&sort=default&withImagesOnly=false"
+    b_url = input("Enter site URL: ")
     session = requests.Session()
     response = session.get(b_url, headers=headers)
     if response.status_code == 200:  # If the answer is 200, then we do the pars
+        try:
             user = []
             soup = bs(response.content, "lxml")
+            block_div = soup.find_all("div", attrs={"class": "DnHhI"})
+            if block_div == None:
+                pass
+            else:
+                print("Поймал!")
             ads = soup.find_all("div", attrs={"class": "_328WR"})
             for data in ads:
-                try:
-                    a = data.find("a", attrs={"class": "MBUbs"})["href"]
-                except:
-                    pass
+                a = data.find("a", attrs={"class": "MBUbs"})["href"]
                 city = data.find("div", attrs={"class": "_20Ixl"}).text
                 url_add = f"https://m.avito.ru{a}"
                 links = {
                     "href": url_add
                 }
                 for data_user in links:
-                    time.sleep(5)
+                    time.sleep(3)
                     new_session = requests.Session()
                     new_response = new_session.get(links[data_user], headers=headers)
                     if new_response.status_code == 200:
@@ -50,10 +58,7 @@ def main():
                         contact_bar = new_soup.find_all("div", attrs={"class": "_3U_HU"})
                         for info in contact_bar:
                             name = info.find("span", attrs={"class": "ZvfUX"}).text
-                            try:
-                                phone = info.find("a", attrs={"class": "_2MOUQ"})["href"]
-                            except:
-                                pass
+                            phone = info.find("a", attrs={"class": "_2MOUQ"})["href"]
                             if "tel:" in phone:
                                 phone.split()
                                 phone = phone[4::1]
@@ -64,6 +69,8 @@ def main():
                             }
                             user.append(user_data)
                             print(len(user))
+        except:
+            pass
     else:
         print(f"Произошла ошибка: {response.status_code}")
 
@@ -79,8 +86,5 @@ def file_write(data):
             print("oK")
 
 
-parser = main()
-print(parser)
-file_write(parser)
+press_button()
 
-# https://m.avito.ru/rossiya/uslugi?owner[]=private&sort=default&withImagesOnly=false

@@ -4,7 +4,6 @@ import requests
 from bs4 import BeautifulSoup as bs
 import csv
 import time
-from tqdm import tqdm
 
 
 def main():
@@ -22,7 +21,6 @@ def main():
     global user_data
     global a
     global user
-    global counter_ads
     # -----[ Global vars ]-----
     b_url = input("Enter site URL: ")
     session = requests.Session()
@@ -31,6 +29,11 @@ def main():
         try:
             user = []
             soup = bs(response.content, "lxml")
+            block_div = soup.find_all("div", attrs={"class": "DnHhI"})
+            if block_div == None:
+                pass
+            else:
+                print("Поймал!")
             ads = soup.find_all("div", attrs={"class": "_328WR"})
             for data in ads:
                 a = data.find("a", attrs={"class": "MBUbs"})["href"]
@@ -40,7 +43,7 @@ def main():
                     "href": url_add
                 }
                 for data_user in links:
-                    time.sleep(5)
+                    time.sleep(3)
                     new_session = requests.Session()
                     new_response = new_session.get(links[data_user], headers=headers)
                     if new_response.status_code == 200:
