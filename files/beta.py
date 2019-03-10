@@ -24,7 +24,7 @@ def main():
     global user
     global counter_ads
     # -----[ Global vars ]-----
-    b_url = "https://m.avito.ru/rossiya/uslugi?owner[]=private&sort=default&withImagesOnly=false"
+    b_url = input("Enter site URL: ")
     session = requests.Session()
     response = session.get(b_url, headers=headers)
     if response.status_code == 200:  # If the answer is 200, then we do the pars
@@ -79,5 +79,3 @@ def file_write(data):
 parser = main()
 print(parser)
 file_write(parser)
-
-# https://m.avito.ru/rossiya/uslugi?owner[]=private&sort=default&withImagesOnly=false
