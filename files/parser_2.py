@@ -51,6 +51,7 @@ def parse_url_city(html):
     for i in main_div:
         try:
             a = i.find('a', attrs={'class': 'MBUbs'})['href']
+            city = i.find("div", attrs={"class": "_20Ixl"}).text
             ls = f'https://m.avito.ru{a}'
             links = {
                 'href': ls
@@ -74,7 +75,8 @@ def parse_url_city(html):
                                 phone = phone[4::1]
                             user_data = {
                                 "name": name,
-                                "phone": phone
+                                "phone": phone,
+                                "city": city
                             }
                             users.append(user_data)
                             print(len(users))
@@ -90,9 +92,9 @@ def parse_url_city(html):
 def file_save(data):
     with open("base.csv", "w") as file:
         wrtr = csv.writer(file)
-        wrtr.writerow(("Имя", "Номер"))
+        wrtr.writerow(("Имя", "Номер", "Город"))
         for i in data:
-            wrtr.writerow((i['name'], i['phone']))
+            wrtr.writerow((i['name'], i['phone'], i['city']))
 
 
 parse_url = parse_url_city(get_html(BASE_URL))
