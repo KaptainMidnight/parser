@@ -18,10 +18,11 @@ def get_ip(html):
 
 def main():
     url = "http://sitespy.ru/my-ip"
-    user_agents = open("useragents.txt", "r").read().split("\n")
-    proxies = open("foxproxy.txt", "r").read().split("\n")
+    user_agents = open("useragents.txt").read().split("\n")
+    proxies = open("foxproxy.txt").read().split("\n")
     proxy = {"http": "http://" + choice(proxies)}
     user_agent = {"user-agent": choice(user_agents)}
+    html = get_html(url, user_agent, proxy)
     try:
         html = get_html(url, user_agent, proxy)
     except:
@@ -29,5 +30,4 @@ def main():
     get_ip(html)
 
 
-if __name__ == '__main__':
-    main()
+print(main())

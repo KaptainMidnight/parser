@@ -1,0 +1,5 @@
+file = open('urls.txt')
+data = file.read().split()
+data.reverse()
+file.close()
+print(data)

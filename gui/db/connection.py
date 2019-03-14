@@ -1,7 +1,7 @@
-import pymysql.cursors
+import pymysql
 
 
-def getConnect():
+def get_connect():
     connection = pymysql.Connect(
         host="localhost",
         user="root",

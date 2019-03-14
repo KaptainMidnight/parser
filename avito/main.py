@@ -1,43 +1,33 @@
 import csv
-
 import time
 import requests
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 
-BASE_URL = input("Enter site URL: ")
+url = input("Enter site: ")
 
 
 # Получаем html разметку главной страницы
-def get_html(url):
-    # req = Request(url, headers={'User-Agent' : 'Mozilla/5.0'})
-    # response = urlopen(req).read()
+def get_html(b_url):
     chromedriver = "/Users/applemac/Downloads/chromedriver"
     driver = webdriver.Chrome(chromedriver)
-    driver.get(url)
-    # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    SCROLL_PAUSE_TIME = 3
+    driver.get(b_url)
+    SCROLL_PAUSE_TIME = 1
 
-    # Get scroll height
-    last_height = driver.execute_script("return document.body.scrollHeight")
-
+    lastHeight = driver.execute_script("return document.body.scrollHeight")
     while True:
-        # Scroll down to bottom
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-        # Wait to load page
         time.sleep(SCROLL_PAUSE_TIME)
         try:
             if driver.find_element_by_class_name("DnHhI").is_displayed():
                 button = driver.find_element_by_class_name("_2bexo")
                 button.click()
         except:
-            continue
-        # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
+            pass
+        newHeight = driver.execute_script("return document.body.scrollHeight")
+        if newHeight == lastHeight:
             break
-        last_height = new_height
+        lastHeight = newHeight
     return driver.page_source
 
 
@@ -85,17 +75,17 @@ def parse_url_city(html):
                 else:
                     print("Error")
         except:
-            pass
+            continue
     return users
 
 
 def file_save(data):
-    with open("base.csv", "w") as file:
+    with open("animals.csv", "w") as file:
         wrtr = csv.writer(file)
         wrtr.writerow(("Имя", "Номер", "Город"))
         for i in data:
             wrtr.writerow((i['name'], i['phone'], i['city']))
 
 
-parse_url = parse_url_city(get_html(BASE_URL))
+parse_url = parse_url_city(get_html(url))
 file_save(parse_url)

@@ -1,32 +1,25 @@
 from tkinter import *
-from gui import connection
+from tkinter import messagebox
+from gui.db.check_login import check_login
 
 
-def check_login(event):
-    connect = connection.getConnect()
+def check(event):
     login = entry_login.get()
     password = entry_pass.get()
-    try:
-        with connect.cursor() as cursor:
-            result = cursor.execute(f"SELECT * FROM users WHERE login={login} AND password={password}")
-            if result == 1:
-                print("Welcome")
-            else:
-                print("Error, password is invalid")
-    finally:
-        connect.close()
-
-
+    check_login(login, password)
+    
 
 root = Tk()
-root.title("Мое первое приложение")
+root.title("Парсер")
 label_login = Label(root, text="Введите свой логин: ")
 label_pass = Label(root, text="Введите свой пароль: ")
+label_copy = Label(root, text="Created by JlecHou6paT", font=5)
 entry_login = Entry(root)
 entry_pass = Entry(root)
-button_check = Button(root, text="Вход", width=20)
+button_check = Button(root, text="Вход", width=15)
+label_copy.grid(row=3, column=0)
 button_check.grid(row=2, column=1)
-button_check.bind("<Button-1>", check_login)
+button_check.bind("<Button-1>", check)
 label_login.grid(row=0, column=0)
 label_pass.grid(row=1, column=0)
 entry_login.grid(row=0, column=1)
