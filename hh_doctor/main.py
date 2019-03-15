@@ -31,11 +31,11 @@ def main():
     driver.get(url)
     page = get_page(url)
     # Получаем ссылки на резюме и парсим их
-    time.sleep(2)
+    time.sleep(5)
     try:
-        # for op in page:
-        #     time.sleep(2)
-        #     driver.get(op)
+        for op in page:
+            time.sleep(5)
+            driver.get(op)
         url_a = driver.find_elements_by_xpath(
             "//div[@class='resume-search-item__content-wrapper']//a[@itemprop='jobTitle']")
 
