@@ -1,33 +1,35 @@
+# -*- charset: utf-8 -*-
+
 import csv
 import time
 import requests
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 
-url = input("Enter site: ")
+url = input("Enter site: ")  # Получаем от пользователя ссылку на сайт
 
 
 # Получаем html разметку главной страницы
 def get_html(b_url):
-    chromedriver = "/Users/applemac/Downloads/chromedriver"
-    driver = webdriver.Chrome(chromedriver)
-    driver.get(b_url)
-    SCROLL_PAUSE_TIME = 1
+    chromedriver = "/Users/applemac/Downloads/chromedriver"  # Подключаем драйвер для браузера
+    driver = webdriver.Chrome(chromedriver)  # Открываем браузер
+    driver.get(b_url)  # Переходим по ссылке на сайт
+    SCROLL_PAUSE_TIME = 3  # Задержка на прокрутку сайта
 
     lastHeight = driver.execute_script("return document.body.scrollHeight")
-    while True:
+    while True:  # Прокрутка сайта вниз
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(SCROLL_PAUSE_TIME)
         try:
             if driver.find_element_by_class_name("DnHhI").is_displayed():
-                button = driver.find_element_by_class_name("_2bexo")
-                button.click()
+                driver.find_element_by_class_name("_2bexo").click()
         except:
-            pass
+            continue
         newHeight = driver.execute_script("return document.body.scrollHeight")
         if newHeight == lastHeight:
             break
-        lastHeight = newHeight
+    driver.quit()
     return driver.page_source
 
 
@@ -80,7 +82,7 @@ def parse_url_city(html):
 
 
 def file_save(data):
-    with open("animals.csv", "w") as file:
+    with open("animals.csv", "a") as file:
         wrtr = csv.writer(file)
         wrtr.writerow(("Имя", "Номер", "Город"))
         for i in data:
